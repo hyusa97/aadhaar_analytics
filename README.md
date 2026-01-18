@@ -1,30 +1,44 @@
-📌 Project Overview
+# Aadhaar  Analytics
 
-This project performs large-scale analysis of Aadhaar service activity data with a focus on:
+State-Level Aadhaar Activity Analysis, Anomaly Detection, and Visualization
 
-Structured data ingestion from monthly CSV dumps
+---
 
-Robust data cleaning and validation
+## Project Overview
 
-State-level feature aggregation
+Aadhaar Pulse Analytics is an end-to-end data science project focused on analyzing Aadhaar service activity at a state level.  
+The system is designed to handle large-scale raw data **offline**, while exposing insights through a **lightweight Streamlit-based analytical interface** over aggregated outputs.
 
-Month-over-Month (MoM) anomaly detection
+The project emphasizes:
+- reproducibility
+- interpretability
+- structured data engineering
+- clear analytical reasoning
 
-Interactive visualization using Streamlit (local execution)
+---
 
-The pipeline is designed to handle high-volume raw data offline, while the Streamlit application serves as a lightweight analytical interface over aggregated outputs.
+## Objectives
 
-🎯 Objectives
+- Build a reproducible data science pipeline for Aadhaar activity analysis  
+- Detect unusual spikes and drops in state-level activity  
+- Provide interpretable, non–black-box anomaly detection  
+- Demonstrate end-to-end ownership: raw data → insights → visualization  
 
-Build a reproducible data science pipeline for Aadhaar activity analysis
+---
 
-Detect unusual spikes and drops in state-level activity
+## Key Features
 
-Provide interpretable, non–black-box anomaly detection
+- Robust data cleaning and validation  
+- State-level feature aggregation  
+- Month-over-Month (MoM) anomaly detection  
+- Interactive visualization using Streamlit (local execution)  
+- Clear separation between offline computation and visualization layer  
 
-Demonstrate end-to-end ownership: raw data → insights → visualization
+---
 
-📂 Project Structure
+## Project Structure
+
+```
 aadhaar_analytics/
 │
 ├── app/
@@ -70,17 +84,25 @@ aadhaar_analytics/
 ├── requirements.txt
 ├── README.md
 └── .gitignore
+```
 
-📊 Data Description
-Raw Data (Required to Run Full Pipeline)
+---
 
-To reproduce the complete pipeline, you must provide 12 raw CSV files (monthly Aadhaar datasets).
+## Data Description
 
-These files are NOT included in the repository and must be placed manually in:
+### Raw Data (Required to Run Full Pipeline)
 
+To reproduce the complete pipeline, **12 raw CSV files** (monthly Aadhaar datasets) are required.
+
+These files are **not included in the repository** and must be placed manually in:
+
+```
 data/raw/
+```
 
-Expected file naming convention (example)
+### Expected File Naming Convention (Example)
+
+```
 api_data_aadhaar_biometric_500000_1000000.csv
 api_data_aadhaar_biometric_1000000_1500000.csv
 api_data_aadhaar_biometric_1500000_1810168.csv
@@ -92,185 +114,169 @@ api_data_aadhaar_demographic_2000000_2071706.csv
 
 api_data_aadhaar_enrolment_500000_1000000.csv
 api_data_aadhaar_enrolment_1000000_1006029.csv
+```
 
+Raw data is intentionally excluded from version control due to size and sensitivity.
 
-⚠️ Important
+---
 
-Filenames are expected as-is
+## GeoJSON Requirement (Mandatory)
 
-Schema must be consistent across files
+The Streamlit visualization requires an India **state-level GeoJSON** file.
 
-Large file sizes are expected and handled offline
+### File Location
 
-🗺️ GeoJSON Requirement (Mandatory)
-
-The Streamlit map requires an India state-level GeoJSON file.
-
-Required file location
+```
 app/geo/india_states.geojson
+```
 
-Source (verified & stable)
+### Source Repository
 
-Download from the following repository:
+Download the GeoJSON file from:
 
-GeoJSON Source
+```
 https://github.com/geohacker/india
+```
 
-Direct file:
-
+File name in repository:
+```
 states_india.geojson
+```
 
-
-Rename it to:
-
+Rename the file to:
+```
 india_states.geojson
+```
 
-GeoJSON property used
+### GeoJSON Property Used
 
-The application maps states using:
+State mapping is performed using the following property:
 
+```
 properties.NAME_1
+```
 
+Ensure that state names in processed CSV files align exactly with this property.
 
-Ensure your CSV state values align with these names.
+---
 
-🧠 Analytical Pipeline
-Phase 1: Data Ingestion
+## Analytical Pipeline
 
-Merge multiple monthly CSVs
+### Phase 1: Data Ingestion
+- Merge multiple monthly CSV files
+- Schema validation
+- Deduplication
 
-Schema validation
+### Phase 2: Data Cleaning
+- Column standardization
+- Missing value handling
+- Date parsing and validation
 
-Deduplication
+### Phase 3: Feature Engineering
+- State-level monthly aggregation
+- Metric consolidation
+- Train/test dataset preparation
 
-Phase 2: Data Cleaning
+### Phase 3.5: Visualization Layer
+- State-wise choropleth map
+- Metric filtering
+- Temporal slicing
 
-Column normalization
+### Phase 4: Anomaly Detection
+- Month-over-Month absolute change
+- Month-over-Month percentage change
+- State-specific statistical baselines
+- Anomaly flags: SPIKE, DROP, NORMAL
 
-Missing value handling
+---
 
-Date parsing
-
-Phase 3: Feature Engineering
-
-State-level monthly aggregation
-
-Train/test splits
-
-Metric consolidation
-
-Phase 3.5: Visualization Layer
-
-Choropleth map (state-wise)
-
-Metric filters
-
-Temporal slicing
-
-Phase 4: Anomaly Detection
-
-Month-over-Month absolute change
-
-Month-over-Month percentage change
-
-State-wise statistical thresholds
-
-Flags: SPIKE, DROP, NORMAL
-
-🚨 Anomaly Detection Logic (Summary)
+## Anomaly Detection Logic (Summary)
 
 For each state:
+1. Compute Month-over-Month percentage change
+2. Calculate state-level mean and standard deviation
+3. Apply statistical thresholds:
 
-Compute MoM percentage change
-
-Calculate state-specific mean and standard deviation
-
-Flag anomalies using:
-
+```
 SPIKE: MoM > mean + 2 × std
 DROP : MoM < mean - 2 × std
+```
 
+This approach ensures transparency and avoids black-box modeling.
 
-This approach ensures:
+---
 
-Interpretability
+## Streamlit Application (Local Execution)
 
-No black-box models
+The Streamlit app serves as a **local analytical interface** for exploring aggregated outputs.
 
-Report-friendly justification
+It is intentionally not deployed to the cloud due to:
+- dataset size
+- memory constraints
+- offline-first pipeline design
 
-🖥️ Streamlit Application (Local)
-Purpose
+### Running Locally
 
-Visual inspection
-
-Insight communication
-
-Demonstration of outputs
-
-⚠️ Not designed for large-scale cloud execution
-
-How to Run Locally
-1️⃣ Create virtual environment
+1. Create a virtual environment:
+```
 python -m venv .venv
-source .venv/bin/activate   # Windows: .venv\Scripts\activate
+```
 
-2️⃣ Install dependencies
+2. Activate the environment:
+```
+.venv\Scripts\activate
+```
+
+3. Install dependencies:
+```
 pip install -r requirements.txt
+```
 
-3️⃣ Ensure required files exist
-
+4. Ensure required files exist:
+```
 data/processed/state_monthly.csv
-
 data/processed/state_monthly_anomalies.csv
-
 app/geo/india_states.geojson
+```
 
-4️⃣ Run Streamlit
+5. Run Streamlit:
+```
 streamlit run app/app.py
+```
 
-🔒 Version Control & Reproducibility
+---
 
-Entire pipeline is version-controlled using Git
+## Version Control and Reproducibility
 
-Raw Aadhaar data is intentionally excluded
+- The entire pipeline is maintained under Git version control
+- Raw Aadhaar data is intentionally excluded
+- The repository serves as:
+  - methodological reference
+  - reproducibility artifact
+  - portfolio demonstration
 
-Repository serves as:
+---
 
-methodological reference
+## Limitations
 
-reproducibility artifact
+- Raw datasets are processed offline
+- Streamlit application operates on aggregated outputs only
+- Cloud deployment is intentionally avoided
+- Forecasting components are exploratory
 
-portfolio evidence
+---
 
-⚠️ Limitations
+## Future Enhancements
 
-Raw datasets are processed offline
+- Cloud-based storage using Parquet and DuckDB
+- Automated pipeline orchestration
+- Anomaly explainability layers
+- Policy and event overlays on trends
 
-Streamlit app uses aggregated outputs only
+---
 
-Cloud deployment is intentionally avoided due to data scale
+## License and Usage
 
-Forecasting module is experimental and not production-tuned
+This project is intended for academic, hackathon, and portfolio use.
 
-🔮 Future Enhancements
-
-Cloud-based storage (Parquet + DuckDB)
-
-Automated pipeline orchestration
-
-Advanced anomaly explainability
-
-Policy/event overlay on trends
-
-📄 License & Usage
-
-This project is intended for:
-
-academic use
-
-hackathons
-
-portfolio demonstration
-
-Raw Aadhaar data usage must comply with UIDAI data policies.
+Usage of Aadhaar-related data must comply with applicable UIDAI data policies.
