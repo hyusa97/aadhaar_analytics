@@ -167,9 +167,14 @@ if not trend_anom.empty:
         x=trend_anom["date"],
         y=trend_anom[metric],
         mode="markers",
-        marker=dict(size=12, symbol="x"),
+        marker=dict(
+            size=12,
+            symbol="x",
+            color="red"   
+        ),
         name="Anomaly"
     )
+
 
 fig_trend.update_layout(
     xaxis_title="Time",
