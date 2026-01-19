@@ -93,7 +93,7 @@ st.plotly_chart(fig, use_container_width=True)
 # ================== PHASE 4: ANOMALIES ===================
 # =========================================================
 
-st.markdown("## 🚨 Detected Anomalies (Phase 4)")
+st.markdown("## 🚨 Detected Anomalies ")
 
 # ---------------- Filter anomaly data ----------------
 if month == "All":
